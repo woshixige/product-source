@@ -1,0 +1,13 @@
+com\briup\product_source\dao\basic\FenceHouseMapper.class
+com\briup\product_source\ProductSourceApplication.class
+com\briup\product_source\bean\basic\FenceHouse.class
+com\briup\product_source\bean\basic\Hurdles.class
+com\briup\product_source\dao\ext\FenceHouseExtMapper.class
+com\briup\product_source\web\controller\AnalysisController.class
+com\briup\product_source\util\ResultUtil.class
+com\briup\product_source\util\Result.class
+com\briup\product_source\util\ResultCode.class
+com\briup\product_source\dao\basic\HurdlesMapper.class
+com\briup\product_source\service\impl\AnalysisServiceImpl.class
+com\briup\product_source\bean\ext\FenceHouseExt.class
+com\briup\product_source\service\AnalysisService.class
