@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.briup.product_source.dao.ext.AnimalExtMapper">
+    <insert id="createQRcodeByAnimalId">
+        INSERT INTO manager_qrcode(q_animal_id,q_image_url)
+        VALUES(#{animalId},#{imgUrl})
+    </insert>
+    <delete id="deleteByBatchId">
+        DELETE FROM manager_animal WHERE a_animal_id IN
+        <foreach collection="ids" open="(" separator="," close=")" item="aAnimalId">
+            #{aAnimalId}
+        </foreach>
+    </delete>
+
+    <resultMap id="BatchResultMap" type="com.briup.product_source.bean.basic.Batch"
+               extends="com.briup.product_source.dao.basic.BatchMapper.BaseResultMap">
+
+    </resultMap>
+    <resultMap id="AnimalExtResultMap" type="com.briup.product_source.bean.ext.AnimalExt"
+               extends="com.briup.product_source.dao.basic.AnimalMapper.BaseResultMap">
+        <result column="h_name" jdbcType="VARCHAR" property="managerHurdles"/>
+        <result column="fh_name" jdbcType="VARCHAR" property="managerFenceHouse"/>
+        <result column="q_image_url" jdbcType="VARCHAR" property="aBackup3"/>
+        <association property="managerBatch" resultMap="BatchResultMap"/>
+    </resultMap>
+    <select id="findAnimalExtByCondition" resultMap="AnimalExtResultMap">
+        SELECT a.*,c.h_name, d.fh_name, e.q_image_url,b.*
+        FROM manager_animal a
+        LEFT JOIN manager_batch b
+        ON a.a_batch_id = b.b_serial_id
+        LEFT JOIN manager_hurdles c
+        ON a.a_hurdles_id = c.h_id
+        LEFT JOIN manager_fence_house d
+        ON c.h_fence_id = d.fh_id
+        LEFT JOIN manager_qrcode e
+        ON a.a_animal_id = e.q_animal_id
+        <where>
+            <if test="aHealthy != null and aHealthy !='' ">
+                a.a_healthy = #{aHealthy}
+            </if>
+            <if test="aGender != null and aGender !='' ">
+                AND a.a_gender = #{aGender}
+            </if>
+        </where>
+    </select>
+    <resultMap id="ManageAnimalResultMap" type="com.briup.product_source.bean.ext.ManagerAnimalExt" extends="com.briup.product_source.dao.basic.AnimalMapper.BaseResultMap">
+        <result column="h_name" jdbcType="VARCHAR" property="managerHurdles"/>
+        <result column="fh_name" jdbcType="VARCHAR" property="managerFenceHouse"/>
+        <association property="managerBatch" resultMap="BatchResultMap"/>
+    </resultMap>
+    <select id="findByAnimalId" resultMap="ManageAnimalResultMap">
+        SELECT a.*, c.h_name, d.fh_name, b.*
+        FROM manager_animal a
+             LEFT JOIN manager_hurdles c
+                   ON a.a_hurdles_id = c.h_id
+             LEFT JOIN manager_fence_house d
+                   ON c.h_fence_id = d.fh_id
+             LEFT JOIN manager_batch b
+                       ON a.a_batch_id = b.b_serial_id
+        WHERE a.a_animal_id = #{id}
+    </select>
+
+
+</mapper>

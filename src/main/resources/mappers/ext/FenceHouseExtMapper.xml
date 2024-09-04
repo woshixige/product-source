@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.product_source.dao.ext.FenceHouseExtMapper">
+    <resultMap id="BaseResultMap" type="com.briup.product_source.bean.ext.FenceHouseExt">
+        <id column="fh_id" jdbcType="VARCHAR" property="fhId"/>
+        <result column="fh_name" jdbcType="VARCHAR" property="fhName"/>
+        <result column="fh_desc" jdbcType="VARCHAR" property="fhDesc"/>
+        <result column="fh_time" jdbcType="TIMESTAMP" property="fhTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        fh_id, fh_name, fh_desc, fh_time
+    </sql>
+    <!--<resultMap id="HurdlesResult" type="com.briup.product_source.bean.basic.Hurdles">
+        <id column="h_id" jdbcType="VARCHAR" property="hId"/>
+        <result column="h_name" jdbcType="VARCHAR" property="hName"/>
+        <result column="h_desc" jdbcType="VARCHAR" property="hDesc"/>
+        <result column="h_max" jdbcType="TIMESTAMP" property="hMax"/>
+        <result column="h_saved" jdbcType="VARCHAR" property="hSaved"/>
+        <result column="h_time" jdbcType="VARCHAR" property="hTime"/>
+        <result column="h_enable" jdbcType="VARCHAR" property="hEnable"/>
+        <result column="h_full" jdbcType="TIMESTAMP" property="hFull"/>
+        <result column="h_fence_id" jdbcType="VARCHAR" property="hFenceId"/>
+    </resultMap>
+    <resultMap id="FenceHouseExtMap" type="com.briup.product_source.bean.ext.FenceHouseExt">
+        <id column="fh_id" jdbcType="VARCHAR" property="fhId"/>
+        <result column="fh_name" jdbcType="VARCHAR" property="fhName"/>
+        <result column="fh_desc" jdbcType="VARCHAR" property="fhDesc"/>
+        <result column="fh_time" jdbcType="TIMESTAMP" property="fhTime"/>
+        <result column="fh_name" jdbcType="VARCHAR" property="fhName"/>
+        <association property="hurdlesList" resultMap="HurdlesResult"/>
+    </resultMap>-->
+    <resultMap id="HurdlesResult" type="com.briup.product_source.bean.basic.Hurdles" extends="com.briup.product_source.dao.basic.HurdlesMapper.BaseResultMap">
+
+    </resultMap>
+    <resultMap id="FenceHouseExtMap" type="com.briup.product_source.bean.ext.FenceHouseExt" extends="com.briup.product_source.dao.basic.FenceHouseMapper.BaseResultMap">
+        <association property="hurdlesList" resultMap="HurdlesResult"/>
+    </resultMap>
+    <select id="findById" resultMap="FenceHouseExtMap">
+        SELECT *
+        FROM manager_fence_house a,
+             manager_hurdles b
+        WHERE a.fh_id = b.h_fence_id
+          and a.fh_id = #{fhId};
+    </select>
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from manager_fence_house
+        where fh_id = #{fhId,jdbcType=VARCHAR}
+    </select>
+    <select id="selectByCondition" resultType="com.briup.product_source.bean.basic.FenceHouse">
+        SELECT <include refid="com.briup.product_source.dao.basic.FenceHouseMapper.Base_Column_List"/>
+        FROM manager_fence_house
+        <where>
+            <if test="fhName != null and fhName != ''">
+                fh_name=#{fhName}
+            </if>
+        </where>
+    </select>
+    <select id="selectFenceHouseByName" resultType="com.briup.product_source.bean.basic.FenceHouse">
+        select <include refid="com.briup.product_source.dao.basic.FenceHouseMapper.Base_Column_List"/>
+        from manager_fence_house where fh_name=#{fhName};
+
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        delete
+        from manager_fence_house
+        where fh_id = #{fhId,jdbcType=VARCHAR}
+    </delete>
+    <delete id="deleteByBatch">
+        delete from manager_fence_house where fh_id in
+        <foreach collection="ids" item="fhId" open="(" separator="," close=")">
+            #{fhId}
+        </foreach>
+    </delete>
+    <insert id="insert" parameterType="com.briup.product_source.bean.ext.FenceHouseExt">
+        insert into manager_fence_house (fh_id, fh_name, fh_desc,
+                                         fh_time)
+        values (#{fhId,jdbcType=VARCHAR}, #{fhName,jdbcType=VARCHAR}, #{fhDesc,jdbcType=VARCHAR},
+                #{fhTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.briup.product_source.bean.ext.FenceHouseExt">
+        insert into manager_fence_house
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="fhId != null">
+                fh_id,
+            </if>
+            <if test="fhName != null">
+                fh_name,
+            </if>
+            <if test="fhDesc != null">
+                fh_desc,
+            </if>
+            <if test="fhTime != null">
+                fh_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="fhId != null">
+                #{fhId,jdbcType=VARCHAR},
+            </if>
+            <if test="fhName != null">
+                #{fhName,jdbcType=VARCHAR},
+            </if>
+            <if test="fhDesc != null">
+                #{fhDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="fhTime != null">
+                #{fhTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.briup.product_source.bean.ext.FenceHouseExt">
+        update manager_fence_house
+        <set>
+            <if test="fhName != null">
+                fh_name = #{fhName,jdbcType=VARCHAR},
+            </if>
+            <if test="fhDesc != null">
+                fh_desc = #{fhDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="fhTime != null">
+                fh_time = #{fhTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where fh_id = #{fhId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.briup.product_source.bean.ext.FenceHouseExt">
+        update manager_fence_house
+        set fh_name = #{fhName,jdbcType=VARCHAR},
+            fh_desc = #{fhDesc,jdbcType=VARCHAR},
+            fh_time = #{fhTime,jdbcType=TIMESTAMP}
+        where fh_id = #{fhId,jdbcType=VARCHAR}
+    </update>
+</mapper>

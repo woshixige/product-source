@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.briup.product_source.dao.ext.AnalysisMapper">
+
+
+    <select id="countWeight" resultType="java.util.Map">
+        SELECT
+            CASE
+                WHEN a_weight <![CDATA[<]]> 30 THEN '30以下'
+                WHEN a_weight BETWEEN 30 AND 50 THEN '30~50'
+                ELSE '50以上'
+                END AS weight_group,
+            COUNT(*) AS count
+        FROM
+            manager_animal
+        GROUP BY
+            weight_group
+    </select>
+    <select id="countNum" resultType="java.util.Map">
+        select "栏舍" as name, count(*) as num from manager_fence_house
+        UNION ALL
+        select "栏圈", count(*) from manager_hurdles
+        UNION ALL
+        select "动物", count(*) from manager_animal
+        UNION ALL
+        select "冷库",count(*) from manager_freezer
+        UNION ALL
+        select "员工",count(*) from base_account
+    </select>
+    <select id="countDisease" resultType="java.util.Map">
+        SELECT
+            b.d_name AS name,
+            count(*) AS count
+        FROM
+            disease_record a,
+            manager_disease b
+        WHERE
+            a.dr_d_id = b.d_id
+        GROUP BY
+            d_id;
+    </select>
+    <select id="countSales" resultType="java.util.Map">
+        select month(isr_time) as month,sum(isr_num) as num
+        from issue_record
+        where YEAR(isr_time) = YEAR(SYSDATE())
+        group by month(isr_time)
+    </select>
+
+
+</mapper>
