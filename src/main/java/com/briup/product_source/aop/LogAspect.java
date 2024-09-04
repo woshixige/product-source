@@ -1,3 +1,4 @@
+/*
 package com.briup.product_source.aop;
 
 import com.briup.product_source.bean.basic.BaseAccount;
@@ -20,11 +21,13 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Date;
 
+*/
 /**
  * @author zzx
  * @version 1.0
  * @date 2024-09-04 9:14
- */
+ *//*
+
 @Slf4j
 @Component
 @Aspect
@@ -73,30 +76,36 @@ public class LogAspect {
                 .logHost(ip)
                 .logRequestUri(requestURI)
                 .logRequestMethod(method).build();
-        /*Log log = new Log();
+        */
+/*Log log = new Log();
         log.setLogHost(ip);
         log.setLogRealname(realname);
         log.setLogTime(date);
         log.setLogUsername(username);
         log.setLogRequestMethod(method);
-        log.setLogRequestUri(requestURI);*/
+        log.setLogRequestUri(requestURI);*//*
+
         logMapper.insertSelective(log);
         //
     }
-    /*@After("logPointCut()")
+    */
+/*@After("logPointCut()")
     public Object afterAdvice(ProceedingJoinPoint pjp) throws Throwable {
         //连接点执行的核心方法
         Object ret = pjp.proceed();
         return ret;
-    }*/
+    }*//*
+
     @Around("logPointCut()")
     public Object around(ProceedingJoinPoint pjp) throws Throwable {
         MethodSignature signature = (MethodSignature)pjp.getSignature();
         Method method = signature.getMethod();
         //获取method上面的注解信息
-        /*ApiOperation apiOperation = method.getAnnotation(ApiOperation.class);
+        */
+/*ApiOperation apiOperation = method.getAnnotation(ApiOperation.class);
         String methodDesc = apiOperation.value();
-        log.info("当前用户的操作：{}",methodDesc);*/
+        log.info("当前用户的操作：{}",methodDesc);*//*
+
         Logging logging = method.getAnnotation(Logging.class);
         String methodDesc = logging.value();
         log.info("当前用户的操作：{}",methodDesc);
@@ -106,3 +115,4 @@ public class LogAspect {
         return result;
     }
 }
+*/

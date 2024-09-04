@@ -1,6 +1,5 @@
 package com.briup.product_source;
 
-import com.briup.product_source.config.QiniuyunProperties;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
